@@ -6,6 +6,8 @@ from typing import List
 from PIL import Image, ImageDraw, ImageFont
 from PIL.ImageFont import FreeTypeFont
 
+from constants import IMAGE_DIR
+
 SPACE: str = " "
 JUMP: str = "\n"
 TEXT_FONT: str = "FreeSerif.ttf"
@@ -51,7 +53,7 @@ def add_caption_to_image(image_name: str, caption: str) -> str:
     # Caption for the image
 
     # Load image
-    image_path: str = os.path.join(image_name)
+    image_path: str = os.path.join(IMAGE_DIR, image_name)
     image: Image = Image.open(fp=image_path)
 
     caption_font_size: int = int(image.width / 18)
@@ -62,7 +64,7 @@ def add_caption_to_image(image_name: str, caption: str) -> str:
         footer_font: FreeTypeFont = ImageFont.truetype(
             FOOTER_FONT, int(caption_font_size * 0.5)
         )
-    except:
+    except Exception:
         font: ImageFont = ImageFont.load_default()
         footer_font: ImageFont = ImageFont.load_default()
 
@@ -111,7 +113,7 @@ def add_caption_to_image(image_name: str, caption: str) -> str:
     new_image.paste(im=image, box=(10, top_size))
     # Save result
     output_name: str = f"edited-{image_name}"
-    new_image.save(os.path.join(output_name))
+    new_image.save(os.path.join(IMAGE_DIR, output_name))
     return output_name
 
 
