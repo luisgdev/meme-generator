@@ -37,7 +37,7 @@ def main():
     file_path = data["message"]["photo"][-1]["file_id"]
 
     try:
-        target_image = telegram.get_tg_file(filename=file_name)
+        target_image = telegram.get_tg_file(filename=file_path)
         edited_image = add_caption_to_image(image_name=target_image, caption=caption)
         print(telegram.send_photo(caption=caption, photo=edited_image, chat_id=chat_id))
     except Exception as ex:
