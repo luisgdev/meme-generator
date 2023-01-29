@@ -1,3 +1,5 @@
+flask
 pillow
 python-dotenv
+requests
 typing
