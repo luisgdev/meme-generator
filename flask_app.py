@@ -2,7 +2,7 @@
 A very simple Flask app for Telegram bots.
 """
 import os
-from pprint import pprint
+from pprint import pformat
 
 from dotenv import load_dotenv
 from flask import Flask, request
@@ -24,8 +24,7 @@ def main():
     Endpoint for the Telegram bot
     """
     data = request.json
-    print("DATA FROM TELEGRAM:")
-    pprint(data)
+    print(f"DATA FROM TELEGRAM: {data}")
     chat_id = data["message"]["chat"]["id"]
 
     if "caption" not in data["message"] or "photo" not in data["message"]:
@@ -42,7 +41,7 @@ def main():
         edited_image = add_caption_to_image(image_name=target_image, caption=caption)
         print(telegram.send_photo(caption=caption, photo=edited_image, chat_id=chat_id))
     except Exception as ex:
-        response = f"Error: {ex}"
+        response = f"Error: {pformat(ex)}"
         print(telegram.send_text(text=response, chat_id=chat_id))
 
     return "ok", 200
