@@ -2,6 +2,7 @@
 A very simple Flask app for Telegram bots.
 """
 import os
+from pprint import pprint
 
 from dotenv import load_dotenv
 from flask import Flask, request
@@ -23,7 +24,8 @@ def main():
     Endpoint for the Telegram bot
     """
     data = request.json
-
+    print("DATA FROM TELEGRAM:")
+    pprint(data)
     chat_id = data["message"]["chat"]["id"]
 
     if "caption" not in data["message"] or "photo" not in data["message"]:

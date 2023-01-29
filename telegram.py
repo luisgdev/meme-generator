@@ -78,7 +78,7 @@ def set_webhook(bot_url: str) -> dict:
     :return: Dict object with Response.
     :raise: Exception if GET request fail.
     """
-    url: str = API_BASE_URL.format(os.environ.get(API_KEY_NAME)) + API_SET_WEBHOOK
+    url: str = API_BASE_URL.format(TOKEN=os.environ.get(API_KEY_NAME)) + API_SET_WEBHOOK
     params: dict = dict(url=bot_url)
     response = requests.get(url=url, params=params, timeout=GET_TIMEOUT)
     if response.status_code == 200:
@@ -87,5 +87,4 @@ def set_webhook(bot_url: str) -> dict:
 
 
 if __name__ == "__main__":
-    ADMIN_ID = os.environ.get(ADMIN_ID)
-    pprint(send_text(text="Probando!", chat_id=ADMIN_ID))
+    pass
