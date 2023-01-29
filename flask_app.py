@@ -18,7 +18,7 @@ SERVER_BOT_ENDPOINT: str = os.environ.get("TG_BOT_ENDPOINT")
 
 
 # BOT ENDPOINT
-@app.route(SERVER_BOT_ENDPOINT, methods=["POST"])
+@app.route(f"/{SERVER_BOT_ENDPOINT}", methods=["POST"])
 def main():
     """
     Endpoint for the Telegram bot
