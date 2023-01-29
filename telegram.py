@@ -72,7 +72,7 @@ def send_photo(caption: str, photo: str, chat_id: int) -> dict:
     :raise: Exception if request fail.
     """
 
-    with open(os.path.join(IMAGE_DIR, photo), "rb") as image:
+    with open(os.path.join(photo), "rb") as image:
         response = requests.post(
             url=API_BASE_URL.format(TOKEN=TG_TOKEN) + API_SEND_IMG,
             params=dict(chat_id=chat_id, caption=caption),

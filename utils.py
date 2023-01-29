@@ -20,6 +20,9 @@ def download_image(url: str, file_name: str) -> str:
     if res.status_code != 200:
         raise Exception(f"Error downloading the image: {res.text}")
     output_name: str = f"{file_name}.png"
-    with open(os.path.join(IMAGE_DIR, output_name), "wb") as image:
-        image.write(res.content)
+    try:
+        with open(os.path.join(output_name), "wb") as image:
+            image.write(res.content)
+    except Exception as ex:
+        print("ERROR: downloading image from telegram failed.")
     return output_name

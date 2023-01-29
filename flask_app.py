@@ -46,6 +46,8 @@ def main():
                 caption=ANSWER_CAPTION, photo=edited_image, chat_id=chat_id
             )
         )
+        os.remove(target_image)
+        os.remove(edited_image)
     except Exception as ex:
         answer = f"Error: {pformat(ex)}"
         print(telegram.send_text(text=answer, chat_id=chat_id))
