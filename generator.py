@@ -6,11 +6,7 @@ from typing import List
 from PIL import Image, ImageDraw, ImageFont
 from PIL.ImageFont import FreeTypeFont
 
-SPACE: str = " "
-JUMP: str = "\n"
-TEXT_FONT: str = "FreeSerif.ttf"
-FOOTER_TEXT: str = "t.me/textoimagenbot"
-FOOTER_FONT: str = "FreeMonoBold.ttf"
+from constants import FOOTER_FONT, FOOTER_TEXT, HEADER_FONT, IMAGE_PADDING
 
 
 def _wrap_text(font: ImageFont, text: str, max_width: int) -> str:
@@ -24,21 +20,21 @@ def _wrap_text(font: ImageFont, text: str, max_width: int) -> str:
     if font.getlength(text=text) < max_width:
         return text
     lines: List[str] = []
-    words_list: List[str] = text.split(SPACE)
+    words_list: List[str] = text.split(" ")
     result: str = ""
     result_size: float = 0.0
     index: int = 0
     while index < len(words_list):
         if result_size < max_width:
-            result += words_list[index] + SPACE
+            result += words_list[index] + " "
         else:
             lines.append(result)
-            result = words_list[index] + SPACE
+            result = words_list[index] + " "
         if index == len(words_list) - 1:
             lines.append(result)
         result_size = font.getlength(text=result)
         index += 1
-    return JUMP.join(lines)
+    return "\n".join(lines)
 
 
 def add_caption_to_image(image_name: str, caption: str) -> str:
@@ -58,7 +54,7 @@ def add_caption_to_image(image_name: str, caption: str) -> str:
 
     # Create fonts
     try:
-        font: FreeTypeFont = ImageFont.truetype(TEXT_FONT, caption_font_size)
+        font: FreeTypeFont = ImageFont.truetype(HEADER_FONT, caption_font_size)
         footer_font: FreeTypeFont = ImageFont.truetype(
             FOOTER_FONT, int(caption_font_size * 0.5)
         )
@@ -68,25 +64,25 @@ def add_caption_to_image(image_name: str, caption: str) -> str:
 
     # Split original caption by jump lines
     captions: List[str] = []
-    for sentence in caption.split(JUMP):
+    for sentence in caption.split("\n"):
         caption = _wrap_text(
             font=font,
             text=sentence,
             max_width=image.width - caption_font_size * 4.3,
         )
         captions.append(caption)
-    caption: str = JUMP.join(captions)
+    caption: str = "\n".join(captions)
 
     # Determine caption lines required
-    lines: int = len(caption.split(JUMP)) if JUMP in caption else 1
+    lines: int = len(caption.split("\n")) if "\n" in caption else 1
 
-    # Determine blank space to draw caption
-    top_size: int = int(caption_font_size * (lines + 1))
-    new_height: int = image.height + top_size + int(caption_font_size * 0.6)
+    # Determine blank space to draw caption (margin top)
+    header_height: int = int(caption_font_size * (lines + 1))
+    new_height: int = image.height + header_height + int(caption_font_size * 0.6)
 
     # Create new image adding the white space to the target image
     new_image: Image = Image.new(
-        mode=image.mode, size=(image.width + 20, new_height), color="white"
+        mode=image.mode, size=(image.width + IMAGE_PADDING, new_height), color="white"
     )
 
     # Create draw object to insert caption (header) and footer
@@ -95,20 +91,19 @@ def add_caption_to_image(image_name: str, caption: str) -> str:
         (caption_font_size, int(caption_font_size * 0.5)),
         caption,
         font=font,
-        fill=(0, 0, 0),
+        fill="black",
     )  # Header
     result.text(
         (
-            int(image.width / 2) - int(footer_font.getlength(text=FOOTER_TEXT) / 2),
-            image.height + top_size,
+            int(image.width / 2 - footer_font.getlength(text=FOOTER_TEXT) / 2),
+            image.height + header_height,
         ),
         text=FOOTER_TEXT,
         font=footer_font,
-        fill=(0, 0, 0),
-        align="right",
+        fill="black",
     )  # Footer
     # Paste the draw object to the new image
-    new_image.paste(im=image, box=(10, top_size))
+    new_image.paste(im=image, box=(int(IMAGE_PADDING / 2), header_height))
     # Save result
     output_name: str = f"edited-{image_name}"
     new_image.save(os.path.join(output_name))
